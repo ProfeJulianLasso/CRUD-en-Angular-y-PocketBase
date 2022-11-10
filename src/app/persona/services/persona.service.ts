@@ -1,6 +1,6 @@
 import { environment } from './../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CollectionModel } from '../models/collection.model';
 import { PersonaModel } from '../models/persona.model';
@@ -9,10 +9,21 @@ import { PersonaModel } from '../models/persona.model';
   providedIn: 'root'
 })
 export class PersonaService {
-  constructor(private httpClient: HttpClient) { }
 
-  getAll(): Observable<CollectionModel> {
-    return this.httpClient.get<CollectionModel>(`${environment.urlBase}/persona/records`);
+  private collection!: CollectionModel;
+  changeCollection: EventEmitter<CollectionModel>;
+
+  constructor(private httpClient: HttpClient) {
+    this.changeCollection = new EventEmitter<CollectionModel>();
+  }
+
+  getAll(): void {
+    this.httpClient.get<CollectionModel>(`${environment.urlBase}/persona/records`).subscribe({
+      next: (data: CollectionModel) => {
+        this.collection = data;
+        this.changeCollection.emit(this.collection);
+      },
+    });
   }
 
   getOne(id: string): Observable<PersonaModel> {

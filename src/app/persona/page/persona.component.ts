@@ -12,10 +12,11 @@ import { PersonaModel } from '../models/persona.model';
 export class PersonaComponent implements OnInit {
 
   frmPersona: FormGroup;
-  personas!: PersonaModel[];
+  personas: PersonaModel[];
   btnValue: string;
 
   constructor(private personaService: PersonaService) {
+    this.personas = [];
     this.btnValue = 'Crear';
     this.frmPersona = new FormGroup({
       id: new FormControl(),
@@ -27,6 +28,11 @@ export class PersonaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPersonas();
+    this.personaService.changeCollection.subscribe((collection: CollectionModel) => {
+      console.log(collection);
+      if (collection.items.length > 0) this.personas = collection.items;
+      else this.personas = [];
+    });
   }
 
   submit(): void {
@@ -73,15 +79,7 @@ export class PersonaComponent implements OnInit {
   }
 
   private getPersonas(): void {
-    this.personaService.getAll().subscribe({
-      next: (collection: CollectionModel) => {
-        console.log(collection);
-        if (collection.items.length > 0) this.personas = collection.items;
-        else this.personas = [];
-      },
-      error: (error: any) => { },
-      complete: () => { },
-    });
+    this.personaService.getAll();
   }
 
 }
