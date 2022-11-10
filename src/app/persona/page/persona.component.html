@@ -1,0 +1,55 @@
+<table border="1" *ngIf="personas.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Correo</th>
+      <th>Fecha Creado</th>
+      <th>Fecha Actualizado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of personas">
+      <td>{{data.id}}</td>
+      <td>{{data.nombre}}</td>
+      <td>{{data.apellido}}</td>
+      <td>{{data.correo}}</td>
+      <td>{{data.created}}</td>
+      <td>{{data.updated}}</td>
+      <td>
+        <button type="button" (click)="toForm(data)">U</button>
+        -
+        <button type="button" (click)="borrar(data.id)">D</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div>
+  <form id="frmPersona" [formGroup]="frmPersona" (ngSubmit)="(btnValue === 'Crear') ? submit() : update()">
+    <div>
+      <label for="idPersona">ID</label>
+      <input formControlName="id" readonly type="text" id="idPersona" name="idPersona" placeholder="Identificador">
+    </div>
+    <div>
+      <label for="nombrePersona">Nombre</label>
+      <input formControlName="nombre" type="text" id="nombrePersona" name="nombrePersona"
+        placeholder="Nombre de la persona">
+    </div>
+    <div>
+      <label for="apellidoPersona">Apellido</label>
+      <input formControlName="apellido" type="text" id="apellidoPersona" name="apellidoPersona"
+        placeholder="Apellido de la persona">
+    </div>
+    <div>
+      <label>Correo</label>
+      <input formControlName="correo" type="email" id="correoPersona" name="correoPersona"
+        placeholder="Correo de la persona">
+    </div>
+  </form>
+</div>
+<div>
+  <button type="submit" form="frmPersona">{{btnValue}}</button>
+</div>
